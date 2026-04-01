@@ -3,7 +3,7 @@
 
 keycloak:
   replicas: 2
-  hostname: "https://keycloak.local:30680"
+  hostname: "https://keycloak.local:31488"
   credentials:
     adminUsername: admin
     adminPassword: admin
