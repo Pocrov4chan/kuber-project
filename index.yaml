@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   keycloak-stack:
   - apiVersion: v2
-    created: "2026-04-01T22:29:07.645387+05:00"
+    created: "2026-04-01T23:29:01.924458+05:00"
     dependencies:
     - name: keycloak
       repository: file://charts/keycloak
@@ -11,10 +11,10 @@ entries:
       repository: file://charts/postgres
       version: 0.1.0
     description: Umbrella chart for Keycloak + PostgreSQL stack
-    digest: 75e22ea64048c201a958498478cb9a40a3f7df7b3f313b0f118ec59372c3be83
+    digest: ffe9f865fe60f2337484d7efe4bea8d5031ff9b627b416c4c7be32b3f90049ab
     name: keycloak-stack
     type: application
     urls:
     - https://pocrov4chan.github.io/kuber-project/keycloak-stack-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-01T22:29:07.644791+05:00"
+generated: "2026-04-01T23:29:01.923734+05:00"
