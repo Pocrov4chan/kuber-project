@@ -2,7 +2,7 @@ notes.txt
 notes_8_lab.txt
 
 # Helm build artifacts
-helm-charts/my-chart/charts/*.tgz
+*.tgz
 helm-charts/my-chart/Chart.lock
 
 # Kubespray
