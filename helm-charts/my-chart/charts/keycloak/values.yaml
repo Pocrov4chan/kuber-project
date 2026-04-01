@@ -1,0 +1,32 @@
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: "26.0"
+
+replicas: 2
+
+hostname: "https://keycloak.local:30680"
+
+ingress:
+  enabled: true
+  className: traefik
+  host: keycloak.local
+  tlsSecret: keycloak-tls
+
+# Pass via --set or external secret in production
+credentials:
+  adminUsername: ""
+  adminPassword: ""
+
+resources:
+  requests:
+    memory: "258Mi"
+    cpu: "100m"
+  limits:
+    memory: "1Gi"
+    cpu: "512m"
+
+serviceAccount:
+  create: true
+
+networkPolicy:
+  enabled: true

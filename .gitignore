@@ -1,0 +1,21 @@
+notes.txt
+notes_8_lab.txt
+
+# Helm build artifacts
+helm-charts/my-chart/charts/*.tgz
+helm-charts/my-chart/Chart.lock
+
+# Kubespray
+kubespray/
+mycluster/credentials/
+
+# TLS certs
+*.key
+*.crt
+
+# Python
+.venv/
+__pycache__/
+
+# OS
+.DS_Store

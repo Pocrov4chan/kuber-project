@@ -1,0 +1,24 @@
+image:
+  repository: postgres
+  tag: "16"
+
+replicas: 1
+
+credentials:
+  database: keycloak
+  username: keycloak
+  password: keycloak123
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+serviceAccount:
+  create: true
+
+networkPolicy:
+  enabled: true

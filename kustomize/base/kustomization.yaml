@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: keycloak-app
+
+labels:
+- pairs:
+    project: keycloak-stack
+  includeSelectors: true
+
+resources:
+- postgres-secrets.yaml
+- keycloak-secret.yaml
+- postgres.yaml
+- postgres-service.yaml
+- keycloak.yaml
+- keycloak-service.yaml
+- keycloak-ingress.yaml
+- network-policies.yaml

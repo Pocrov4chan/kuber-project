@@ -1,0 +1,13 @@
+{{- if .Values.serviceAccount.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "postgres.name" . }}
+  labels:
+    {{- include "postgres.labels" . | nindent 4 }}
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  resourceNames: ["{{ include "postgres.name" . }}"]
+  verbs: ["get"]
+{{- end }}

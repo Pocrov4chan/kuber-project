@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: keycloak
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: keycloak
+        image: quay.io/keycloak/keycloak:26.0
+        args:
+        - start-dev
+        ports:
+        - containerPort: 8080
+        env:
+        - name: KC_DB
+          value: postgres
+        - name: KC_DB_URL
+          value: jdbc:postgresql://postgres.keycloak-app.svc.cluster.local:5432/keycloak
+        - name: KC_DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: POSTGRES_USER
+        - name: KC_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: POSTGRES_PASSWORD
+        - name: JAVA_OPTS_APPEND
+          value: "-XX:UseSVE=0"
+        - name: KC_HOSTNAME
+          value: "https://keycloak.local:30680"
+        - name: KC_HOSTNAME_STRICT
+          value: "false"
+        - name: KC_PROXY_HEADERS
+          value: "xforwarded"
+        - name: KC_HEALTH_ENABLED
+          value: "true"
+        - name: KC_BOOTSTRAP_ADMIN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-credentials
+              key: KC_BOOTSTRAP_ADMIN_USERNAME
+        - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-credentials
+              key: KC_BOOTSTRAP_ADMIN_PASSWORD
+        resources:
+          requests:
+            memory: "258Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "512m"
+        securityContext:
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 9000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 9000
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}

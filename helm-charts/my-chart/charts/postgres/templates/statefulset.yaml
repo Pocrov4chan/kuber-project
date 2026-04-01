@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "postgres.name" . }}
+  labels:
+    {{- include "postgres.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "postgres.name" . }}
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      {{- include "postgres.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "postgres.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "postgres.name" . }}
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: postgres
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - secretRef:
+            name: {{ include "postgres.name" . }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: false
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - {{ .Values.credentials.username }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - {{ .Values.credentials.username }}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        - name: postgres-run
+          mountPath: /var/run/postgresql
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: postgres-data
+        emptyDir: {}
+      - name: postgres-run
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}

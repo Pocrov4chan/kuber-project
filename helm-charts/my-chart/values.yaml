@@ -1,0 +1,21 @@
+# Parent values — override subchart defaults here.
+# Keys must match subchart names (keycloak, postgres).
+
+keycloak:
+  replicas: 2
+  hostname: "https://keycloak.local:30680"
+  credentials:
+    adminUsername: admin
+    adminPassword: admin
+  ingress:
+    enabled: true
+    className: traefik
+    host: keycloak.local
+    tlsSecret: keycloak-tls
+
+postgres:
+  replicas: 1
+  credentials:
+    database: keycloak
+    username: keycloak
+    password: keycloak123
