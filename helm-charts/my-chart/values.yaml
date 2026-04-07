@@ -4,9 +4,6 @@
 keycloak:
   replicas: 2
   hostname: "https://keycloak.local:31488"
-  credentials:
-    adminUsername: admin
-    adminPassword: admin
   ingress:
     enabled: true
     className: traefik
@@ -15,7 +12,3 @@ keycloak:
 
 postgres:
   replicas: 1
-  credentials:
-    database: keycloak
-    username: keycloak
-    password: keycloak123

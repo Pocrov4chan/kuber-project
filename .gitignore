@@ -1,6 +1,5 @@
 notes.txt
-notes_8_lab.txt
-
+notes9.txt
 # Helm build artifacts
 *.tgz
 helm-charts/my-chart/Chart.lock

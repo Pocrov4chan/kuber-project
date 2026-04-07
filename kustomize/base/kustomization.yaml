@@ -9,8 +9,6 @@ labels:
   includeSelectors: true
 
 resources:
-- postgres-secrets.yaml
-- keycloak-secret.yaml
 - postgres.yaml
 - postgres-service.yaml
 - keycloak.yaml

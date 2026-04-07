@@ -4,11 +4,6 @@ image:
 
 replicas: 1
 
-credentials:
-  database: keycloak
-  username: keycloak
-  password: keycloak123
-
 resources:
   requests:
     memory: "256Mi"

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Pocrov4chan/kuber-project.git
+    targetRevision: HEAD
+    path: helm-charts/my-chart
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: keycloak-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

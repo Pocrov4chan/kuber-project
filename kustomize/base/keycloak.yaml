@@ -52,7 +52,7 @@ spec:
         - name: JAVA_OPTS_APPEND
           value: "-XX:UseSVE=0"
         - name: KC_HOSTNAME
-          value: "https://keycloak.local:30680"
+          value: "https://keycloak.local:31488"
         - name: KC_HOSTNAME_STRICT
           value: "false"
         - name: KC_PROXY_HEADERS

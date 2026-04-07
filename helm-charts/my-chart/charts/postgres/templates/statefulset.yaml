@@ -38,7 +38,7 @@ spec:
             command:
             - pg_isready
             - -U
-            - {{ .Values.credentials.username }}
+            - $(POSTGRES_USER)
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
@@ -46,7 +46,7 @@ spec:
             command:
             - pg_isready
             - -U
-            - {{ .Values.credentials.username }}
+            - $(POSTGRES_USER)
           initialDelaySeconds: 15
           periodSeconds: 20
         volumeMounts:
