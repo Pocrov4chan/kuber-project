@@ -10,12 +10,14 @@ spec:
     chart: traefik 
     targetRevision: 39.0.7
     helm:
-      values: | 
+      values: |
         service:
           type: NodePort
-          nodePorts:
-            web: 30528
-            websecure: 30680
+        ports:
+          web:
+            nodePort: 30528
+          websecure:
+            nodePort: 30680
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
