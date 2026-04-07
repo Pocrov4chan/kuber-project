@@ -3,7 +3,7 @@
 
 keycloak:
   replicas: 2
-  hostname: "https://keycloak.local:31488"
+  hostname: "https://keycloak.local:30680"
   ingress:
     enabled: true
     className: traefik
