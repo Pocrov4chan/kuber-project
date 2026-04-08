@@ -57,9 +57,16 @@ spec:
         - name: tmp
           mountPath: /tmp
       volumes:
-      - name: postgres-data
-        emptyDir: {}
       - name: postgres-run
         emptyDir: {}
       - name: tmp
         emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: longhorn
+      resources:
+        requests:
+          storage: 1Gi
