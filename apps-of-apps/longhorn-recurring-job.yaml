@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn-recurring-jobs
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Pocrov4chan/kuber-project.git
+    targetRevision: HEAD
+    path: longhorn
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
