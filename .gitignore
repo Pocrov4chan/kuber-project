@@ -23,3 +23,5 @@ __pycache__/
 
 keycloak.yaml
 post.yaml
+minio-backup-secret.yaml
+minio-creds.yaml
