@@ -2,7 +2,7 @@
 # Keys must match subchart names (keycloak, postgres).
 
 keycloak:
-  replicas: 2
+  replicas: 1
   hostname: "https://keycloak.local:30680"
   ingress:
     enabled: true
@@ -11,4 +11,4 @@ keycloak:
     tlsSecret: keycloak-tls
 
 postgres:
-  replicas: 1
+  replicas: 2
