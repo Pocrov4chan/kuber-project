@@ -2,7 +2,7 @@ image:
   repository: quay.io/keycloak/keycloak
   tag: "26.0"
 
-replicas: 2
+replicas: 1
 
 hostname: "https://keycloak.local:30680"
 
