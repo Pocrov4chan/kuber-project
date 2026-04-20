@@ -22,7 +22,5 @@ __pycache__/
 # OS
 .DS_Store
 
-keycloak.yaml
-post.yaml
-minio-backup-secret.yaml
-minio-creds.yaml
+# Plaintext secrets (sealed versions in sealed-secrets/ are committed)
+unsealed/
