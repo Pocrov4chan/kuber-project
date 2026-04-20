@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: podinfo
+  namespace: lab-bluegreen
+spec:
+  replicas: 2
+  strategy:
+    blueGreen:
+      activeService: podinfo-active
+      previewService: podinfo-preview
+      autoPromotionEnabled: false
+      scaleDownDelaySeconds: 30
+  selector:
+    matchLabels:
+      app: podinfo
+  template:
+    metadata:
+      labels:
+        app: podinfo
+    spec:
+      containers:
+      - name: podinfo
+        image: ghcr.io/stefanprodan/podinfo:6.5.0
+        ports:
+        - containerPort: 9898
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 9898
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 9898
+        resources:
+          requests:
+            cpu: 50m
+            memory: 32Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
