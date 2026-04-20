@@ -11,4 +11,4 @@ keycloak:
     tlsSecret: keycloak-tls
 
 postgres:
-  replicas: 2
+  replicas: 1
