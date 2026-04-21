@@ -37,16 +37,12 @@ spec:
           exec:
             command:
             - pg_isready
-            - -U
-            - $(POSTGRES_USER)
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           exec:
             command:
             - pg_isready
-            - -U
-            - $(POSTGRES_USER)
           initialDelaySeconds: 15
           periodSeconds: 20
         volumeMounts:
