@@ -5,6 +5,8 @@ metadata:
   namespace: lab-canary
 spec:
   replicas: 5
+  progressDeadlineSeconds: 60
+  progressDeadlineAbort: true
   strategy:
     canary:
       canaryService: podinfo-canary
@@ -28,7 +30,7 @@ spec:
     spec:
       containers:
       - name: podinfo
-        image: ghcr.io/stefanprodan/podinfo:6.5.4
+        image: ghcr.io/stefanprodan/NOTRIGHTTEST
         ports:
         - containerPort: 9898
         readinessProbe:

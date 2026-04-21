@@ -4,6 +4,8 @@ metadata:
   name: podinfo
   namespace: lab-bluegreen
 spec:
+  progressDeadlineSeconds: 60
+  progressDeadlineAbort: true
   replicas: 2
   strategy:
     blueGreen:
@@ -21,7 +23,7 @@ spec:
     spec:
       containers:
       - name: podinfo
-        image: ghcr.io/stefanprodan/podinfo:6.5.0
+        image: ghcr.io/stefanprodan/DOESNOTEXIST
         ports:
         - containerPort: 9898
         readinessProbe:
