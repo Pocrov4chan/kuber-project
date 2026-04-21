@@ -15,6 +15,9 @@ spec:
       values: |
         crds:
           enabled: true
+          upgradeJob:
+            enabled: true
+            forceConflicts: true
         defaultRules:
           create: false
         alertmanager:
