@@ -4,7 +4,8 @@ metadata:
   name: podinfo
   namespace: lab-bluegreen
 spec:
-  replicas: 2
+  # replicas: 2
+  progressDeadlineAbort: true
   strategy:
     blueGreen:
       activeService: podinfo-active
