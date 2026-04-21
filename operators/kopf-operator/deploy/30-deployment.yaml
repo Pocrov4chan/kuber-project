@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: operator
-          image: ghcr.io/pocrov4chan/platform-operator:v1
+          image: ghcr.io/pocrov4chan/platform-operator:v2
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
