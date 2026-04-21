@@ -16,11 +16,12 @@ kubeseal --fetch-cert \
   --controller-namespace=kube-system \
   > "$CERT"
 
-echo "==> Re-sealing all four secrets..."
+echo "==> Re-sealing secrets..."
 kubeseal --cert "$CERT" -o yaml < "$IN/keycloak.yaml"           > "$OUT/sealed-keycloak.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/post.yaml"               > "$OUT/sealed-postgres.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/minio-creds.yaml"        > "$OUT/sealed-minio-creds.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/minio-backup-secret.yaml" > "$OUT/sealed-minio-backup.yaml"
+kubeseal --cert "$CERT" -o yaml < "$IN/grafana-admin.yaml"      > "$OUT/sealed-grafana-admin.yaml"
 
 echo "==> Verifying all outputs contain encryptedData..."
 missing=$(grep -L "encryptedData" "$OUT"/*.yaml || true)
