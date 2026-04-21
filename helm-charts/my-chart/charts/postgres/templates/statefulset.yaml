@@ -36,13 +36,17 @@ spec:
         readinessProbe:
           exec:
             command:
-            - pg_isready
+            - sh
+            - -c
+            - 'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           exec:
             command:
-            - pg_isready
+            - sh
+            - -c
+            - 'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
           initialDelaySeconds: 15
           periodSeconds: 20
         volumeMounts:
