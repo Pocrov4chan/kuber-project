@@ -18,9 +18,6 @@ spec:
       serviceAccountName: {{ include "postgres.name" . }}
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 999
-        runAsGroup: 999
         fsGroup: 999
         seccompProfile:
           type: RuntimeDefault
@@ -36,9 +33,6 @@ spec:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop: ["ALL"]
         readinessProbe:
           exec:
             command:
