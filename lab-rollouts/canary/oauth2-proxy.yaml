@@ -25,13 +25,7 @@ spec:
       serviceAccountName: oauth2-proxy
       automountServiceAccountToken: false
       hostAliases:
-        - ip: "192.168.105.47"
-          hostnames:
-            - "keycloak.local"
-        - ip: "192.168.105.48"
-          hostnames:
-            - "keycloak.local"
-        - ip: "192.168.105.49"
+        - ip: "192.168.105.100"
           hostnames:
             - "keycloak.local"
       securityContext:
@@ -45,12 +39,12 @@ spec:
           image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
           args:
             - --provider=oidc
-            - --oidc-issuer-url=https://keycloak.local:30680/realms/homelab
+            - --oidc-issuer-url=https://keycloak.local/realms/homelab
             - --client-id=podinfo
             - --client-secret-file=/etc/oauth2-proxy/client-secret
             - --cookie-secret-file=/etc/oauth2-proxy/cookie-secret
             - --upstream=http://podinfo-stable.lab-canary.svc.cluster.local
-            - --redirect-url=https://app.local:30680/oauth2/callback
+            - --redirect-url=https://app.local/oauth2/callback
             - --email-domain=*
             - --cookie-secure=true
             - --cookie-domain=app.local

@@ -4,7 +4,7 @@ image:
 
 replicas: 1
 
-hostname: "https://keycloak.local:30680"
+hostname: "https://keycloak.local"
 
 ingress:
   enabled: true

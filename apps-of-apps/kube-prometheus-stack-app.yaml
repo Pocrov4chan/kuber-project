@@ -83,13 +83,7 @@ spec:
               isDefault: false
               editable: false
           hostAliases:
-            - ip: "192.168.105.47"
-              hostnames:
-                - "keycloak.local"
-            - ip: "192.168.105.48"
-              hostnames:
-                - "keycloak.local"
-            - ip: "192.168.105.49"
+            - ip: "192.168.105.100"
               hostnames:
                 - "keycloak.local"
           extraSecretMounts:
@@ -99,7 +93,7 @@ spec:
               readOnly: true
           grafana.ini:
             server:
-              root_url: https://grafana.local:30680
+              root_url: https://grafana.local
             auth.generic_oauth:
               enabled: true
               name: Keycloak
@@ -107,9 +101,9 @@ spec:
               client_id: grafana
               client_secret: $__file{/etc/secrets/grafana-oidc/client-secret}
               scopes: openid profile email
-              auth_url: https://keycloak.local:30680/realms/homelab/protocol/openid-connect/auth
-              token_url: https://keycloak.local:30680/realms/homelab/protocol/openid-connect/token
-              api_url: https://keycloak.local:30680/realms/homelab/protocol/openid-connect/userinfo
+              auth_url: https://keycloak.local/realms/homelab/protocol/openid-connect/auth
+              token_url: https://keycloak.local/realms/homelab/protocol/openid-connect/token
+              api_url: https://keycloak.local/realms/homelab/protocol/openid-connect/userinfo
               tls_skip_verify_insecure: true
               role_attribute_path: "'Admin'"
         kube-state-metrics:

@@ -12,7 +12,7 @@ spec:
     helm:
       values: |
         service:
-          type: NodePort
+          type: LoadBalancer
         ports:
           web:
             nodePort: 30528

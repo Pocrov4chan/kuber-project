@@ -76,7 +76,7 @@ spec:
             cidr: 192.168.105.0/24
       ports:
         - protocol: TCP
-          port: 30680
+          port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
