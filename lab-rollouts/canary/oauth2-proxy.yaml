@@ -42,7 +42,6 @@ spec:
             - --oidc-issuer-url=https://keycloak.local/realms/homelab
             - --client-id=podinfo
             - --client-secret-file=/etc/oauth2-proxy/client-secret
-            - --cookie-secret-file=/etc/oauth2-proxy/cookie-secret
             - --upstream=http://podinfo-stable.lab-canary.svc.cluster.local
             - --redirect-url=https://app.local/oauth2/callback
             - --email-domain=*
@@ -55,6 +54,12 @@ spec:
             - --pass-access-token=false
             - --set-xauthrequest=true
             - --ssl-insecure-skip-verify=true
+          env:
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: oauth2-proxy
+                  key: cookie-secret
           ports:
             - name: http
               containerPort: 4180
@@ -92,8 +97,6 @@ spec:
             items:
               - key: client-secret
                 path: client-secret
-              - key: cookie-secret
-                path: cookie-secret
 ---
 apiVersion: v1
 kind: Service
