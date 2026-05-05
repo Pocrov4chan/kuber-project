@@ -100,7 +100,9 @@ spec:
               auth_url: https://keycloak.local/realms/homelab/protocol/openid-connect/auth
               token_url: http://helm-app-keycloak.keycloak-app.svc.cluster.local:8080/realms/homelab/protocol/openid-connect/token
               api_url: http://helm-app-keycloak.keycloak-app.svc.cluster.local:8080/realms/homelab/protocol/openid-connect/userinfo
-              role_attribute_path: "'Admin'"
+              role_attribute_path: "contains(groups[*], 'platform:admin') && 'Admin' || contains(groups[*], 'platform:edit') && 'Editor' || contains(groups[*], 'platform:view') && 'Viewer' || 'Viewer'"
+              role_attribute_strict: true
+              auto_assign_org_role: Viewer
         kube-state-metrics:
           resources:
             requests:
