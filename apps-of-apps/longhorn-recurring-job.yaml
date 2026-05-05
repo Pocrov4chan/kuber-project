@@ -1,18 +1,22 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: longhorn-recurring-jobs
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/Pocrov4chan/kuber-project.git
-    targetRevision: HEAD
-    path: longhorn
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: longhorn-system
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+# Longhorn recurring snapshot/backup CronJobs disabled to reduce I/O on node2.
+# Backup CronJob also lost its target when MinIO was disabled.
+# Re-enable by uncommenting (and re-enable MinIO if you want backups working).
+#
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: longhorn-recurring-jobs
+#   namespace: argocd
+# spec:
+#   project: default
+#   source:
+#     repoURL: https://github.com/Pocrov4chan/kuber-project.git
+#     targetRevision: HEAD
+#     path: longhorn
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: longhorn-system
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true

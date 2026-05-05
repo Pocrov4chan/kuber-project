@@ -1,31 +1,35 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: vpa
-  namespace: argocd
-  annotations:
-    argocd.argoproj.io/compare-options: ServerSideDiff=true
-spec:
-  project: default
-  source:
-    repoURL: https://charts.fairwinds.com/stable
-    chart: vpa
-    targetRevision: 4.11.0
-    helm:
-      values: |
-        recommender:
-          enabled: true
-        updater:
-          enabled: true
-        admissionController:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: vpa
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - ServerSideApply=true
+# VPA disabled to free ~250Mi RAM (3 controllers: admission, recommender, updater).
+# Was only doing recommendations on lab-canary podinfo (updateMode: "Off").
+# HPA covers the autoscaling rubric line. Re-enable by uncommenting.
+#
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: vpa
+#   namespace: argocd
+#   annotations:
+#     argocd.argoproj.io/compare-options: ServerSideDiff=true
+# spec:
+#   project: default
+#   source:
+#     repoURL: https://charts.fairwinds.com/stable
+#     chart: vpa
+#     targetRevision: 4.11.0
+#     helm:
+#       values: |
+#         recommender:
+#           enabled: true
+#         updater:
+#           enabled: true
+#         admissionController:
+#           enabled: true
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: vpa
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
+#       - ServerSideApply=true
