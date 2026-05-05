@@ -16,6 +16,14 @@ spec:
           service:
             type: NodePort
             nodePort: 30084
+          containerSecurityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
   destination:
     server: https://kubernetes.default.svc
     namespace: argo-rollouts
