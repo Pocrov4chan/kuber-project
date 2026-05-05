@@ -57,6 +57,8 @@ spec:
           value: {{ .Values.hostname | quote }}
         - name: KC_HOSTNAME_STRICT
           value: "true"
+        - name: KC_HOSTNAME_BACKCHANNEL_DYNAMIC
+          value: "true"
         - name: KC_HTTP_ENABLED
           value: "true"
         - name: KC_PROXY_HEADERS

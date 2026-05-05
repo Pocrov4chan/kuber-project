@@ -24,10 +24,6 @@ spec:
     spec:
       serviceAccountName: oauth2-proxy
       automountServiceAccountToken: false
-      hostAliases:
-        - ip: "192.168.105.100"
-          hostnames:
-            - "keycloak.local"
       securityContext:
         runAsNonRoot: true
         runAsUser: 65532
@@ -40,6 +36,12 @@ spec:
           args:
             - --provider=oidc
             - --oidc-issuer-url=https://keycloak.local/realms/homelab
+            - --skip-oidc-discovery=true
+            - --login-url=https://keycloak.local/realms/homelab/protocol/openid-connect/auth
+            - --redeem-url=http://helm-app-keycloak.keycloak-app.svc.cluster.local:8080/realms/homelab/protocol/openid-connect/token
+            - --oidc-jwks-url=http://helm-app-keycloak.keycloak-app.svc.cluster.local:8080/realms/homelab/protocol/openid-connect/certs
+            - --profile-url=http://helm-app-keycloak.keycloak-app.svc.cluster.local:8080/realms/homelab/protocol/openid-connect/userinfo
+            - --validate-url=http://helm-app-keycloak.keycloak-app.svc.cluster.local:8080/realms/homelab/protocol/openid-connect/userinfo
             - --client-id=podinfo
             - --client-secret-file=/etc/oauth2-proxy/client-secret
             - --upstream=http://podinfo-stable.lab-canary.svc.cluster.local
@@ -53,7 +55,6 @@ spec:
             - --skip-provider-button=true
             - --pass-access-token=false
             - --set-xauthrequest=true
-            - --ssl-insecure-skip-verify=true
           env:
             - name: OAUTH2_PROXY_COOKIE_SECRET
               valueFrom:

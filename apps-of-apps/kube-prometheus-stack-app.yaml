@@ -82,10 +82,6 @@ spec:
               url: http://loki.monitoring.svc:3100
               isDefault: false
               editable: false
-          hostAliases:
-            - ip: "192.168.105.100"
-              hostnames:
-                - "keycloak.local"
           extraSecretMounts:
             - name: grafana-oidc
               secretName: grafana-oidc
@@ -102,9 +98,8 @@ spec:
               client_secret: $__file{/etc/secrets/grafana-oidc/client-secret}
               scopes: openid profile email
               auth_url: https://keycloak.local/realms/homelab/protocol/openid-connect/auth
-              token_url: https://keycloak.local/realms/homelab/protocol/openid-connect/token
-              api_url: https://keycloak.local/realms/homelab/protocol/openid-connect/userinfo
-              tls_skip_verify_insecure: true
+              token_url: http://helm-app-keycloak.keycloak-app.svc.cluster.local:8080/realms/homelab/protocol/openid-connect/token
+              api_url: http://helm-app-keycloak.keycloak-app.svc.cluster.local:8080/realms/homelab/protocol/openid-connect/userinfo
               role_attribute_path: "'Admin'"
         kube-state-metrics:
           resources:
