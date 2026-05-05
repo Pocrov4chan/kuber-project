@@ -1,0 +1,161 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: oauth2-proxy
+  namespace: lab-canary
+automountServiceAccountToken: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth2-proxy
+  namespace: lab-canary
+  labels:
+    app: oauth2-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        app: oauth2-proxy
+    spec:
+      serviceAccountName: oauth2-proxy
+      automountServiceAccountToken: false
+      hostAliases:
+        - ip: "192.168.105.47"
+          hostnames:
+            - "keycloak.local"
+        - ip: "192.168.105.48"
+          hostnames:
+            - "keycloak.local"
+        - ip: "192.168.105.49"
+          hostnames:
+            - "keycloak.local"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+          args:
+            - --provider=oidc
+            - --oidc-issuer-url=https://keycloak.local:30680/realms/homelab
+            - --client-id=podinfo
+            - --client-secret-file=/etc/oauth2-proxy/client-secret
+            - --cookie-secret-file=/etc/oauth2-proxy/cookie-secret
+            - --upstream=http://podinfo-stable.lab-canary.svc.cluster.local
+            - --redirect-url=https://app.local:30680/oauth2/callback
+            - --email-domain=*
+            - --cookie-secure=true
+            - --cookie-domain=app.local
+            - --whitelist-domain=app.local
+            - --http-address=0.0.0.0:4180
+            - --reverse-proxy=true
+            - --skip-provider-button=true
+            - --pass-access-token=false
+            - --set-xauthrequest=true
+            - --ssl-insecure-skip-verify=true
+          ports:
+            - name: http
+              containerPort: 4180
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 4180
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 4180
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          volumeMounts:
+            - name: oauth2-proxy-secret
+              mountPath: /etc/oauth2-proxy
+              readOnly: true
+      volumes:
+        - name: oauth2-proxy-secret
+          secret:
+            secretName: oauth2-proxy
+            items:
+              - key: client-secret
+                path: client-secret
+              - key: cookie-secret
+                path: cookie-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oauth2-proxy
+  namespace: lab-canary
+  labels:
+    app: oauth2-proxy
+spec:
+  type: ClusterIP
+  selector:
+    app: oauth2-proxy
+  ports:
+    - name: http
+      port: 4180
+      targetPort: 4180
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oauth2-proxy
+  namespace: lab-canary
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - app.local
+      secretName: app-local-tls
+  rules:
+    - host: app.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: oauth2-proxy
+                port:
+                  number: 4180
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: oauth2-proxy
+  namespace: lab-canary
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: oauth2-proxy
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

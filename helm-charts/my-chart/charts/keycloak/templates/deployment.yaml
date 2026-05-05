@@ -32,7 +32,8 @@ spec:
       - name: keycloak
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         args:
-        - start-dev
+        - start
+        - --import-realm
         ports:
         - containerPort: 8080
         env:
@@ -55,7 +56,9 @@ spec:
         - name: KC_HOSTNAME
           value: {{ .Values.hostname | quote }}
         - name: KC_HOSTNAME_STRICT
-          value: "false"
+          value: "true"
+        - name: KC_HTTP_ENABLED
+          value: "true"
         - name: KC_PROXY_HEADERS
           value: "xforwarded"
         - name: KC_HEALTH_ENABLED
@@ -82,17 +85,23 @@ spec:
           httpGet:
             path: /health/ready
             port: 9000
-          initialDelaySeconds: 30
+          initialDelaySeconds: 90
           periodSeconds: 10
         livenessProbe:
           httpGet:
             path: /health/live
             port: 9000
-          initialDelaySeconds: 60
+          initialDelaySeconds: 150
           periodSeconds: 20
         volumeMounts:
         - name: tmp
           mountPath: /tmp
+        - name: realm-import
+          mountPath: /opt/keycloak/data/import
+          readOnly: true
       volumes:
       - name: tmp
         emptyDir: {}
+      - name: realm-import
+        secret:
+          secretName: {{ include "keycloak.name" . }}-realm

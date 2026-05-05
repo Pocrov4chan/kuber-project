@@ -25,3 +25,4 @@ __pycache__/
 
 # Plaintext secrets (sealed versions in sealed-secrets/ are committed)
 unsealed/
+CLAUDE.md

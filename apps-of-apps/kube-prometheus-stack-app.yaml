@@ -19,6 +19,20 @@ spec:
           create: false
         alertmanager:
           enabled: false
+        additionalPrometheusRulesMap:
+          homelab-rules:
+            groups:
+              - name: homelab.rules
+                rules:
+                  - alert: KubePodCrashLooping
+                    expr: |
+                      max_over_time(kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff"}[5m]) >= 1
+                    for: 10m
+                    labels:
+                      severity: warning
+                    annotations:
+                      summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash-looping"
+                      description: "Container {{ $labels.container }} in pod {{ $labels.namespace }}/{{ $labels.pod }} has been in CrashLoopBackOff for 10 minutes."
         prometheus:
           prometheusSpec:
             retention: 6h
@@ -68,6 +82,36 @@ spec:
               url: http://loki.monitoring.svc:3100
               isDefault: false
               editable: false
+          hostAliases:
+            - ip: "192.168.105.47"
+              hostnames:
+                - "keycloak.local"
+            - ip: "192.168.105.48"
+              hostnames:
+                - "keycloak.local"
+            - ip: "192.168.105.49"
+              hostnames:
+                - "keycloak.local"
+          extraSecretMounts:
+            - name: grafana-oidc
+              secretName: grafana-oidc
+              mountPath: /etc/secrets/grafana-oidc
+              readOnly: true
+          grafana.ini:
+            server:
+              root_url: https://grafana.local:30680
+            auth.generic_oauth:
+              enabled: true
+              name: Keycloak
+              allow_sign_up: true
+              client_id: grafana
+              client_secret: $__file{/etc/secrets/grafana-oidc/client-secret}
+              scopes: openid profile email
+              auth_url: https://keycloak.local:30680/realms/homelab/protocol/openid-connect/auth
+              token_url: https://keycloak.local:30680/realms/homelab/protocol/openid-connect/token
+              api_url: https://keycloak.local:30680/realms/homelab/protocol/openid-connect/userinfo
+              tls_skip_verify_insecure: true
+              role_attribute_path: "'Admin'"
         kube-state-metrics:
           resources:
             requests:
