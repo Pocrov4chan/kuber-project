@@ -19,8 +19,9 @@ kubeseal --fetch-cert \
 echo "==> Re-sealing secrets..."
 kubeseal --cert "$CERT" -o yaml < "$IN/keycloak.yaml"            > "$OUT/sealed-keycloak.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/post.yaml"                > "$OUT/sealed-postgres.yaml"
-kubeseal --cert "$CERT" -o yaml < "$IN/minio-creds.yaml"         > "$OUT/sealed-minio-creds.yaml"
-kubeseal --cert "$CERT" -o yaml < "$IN/minio-backup-secret.yaml" > "$OUT/sealed-minio-backup.yaml"
+# MinIO disabled — uncomment along with apps-of-apps/minio-app.yaml
+# kubeseal --cert "$CERT" -o yaml < "$IN/minio-creds.yaml"         > "$OUT/sealed-minio-creds.yaml"
+# kubeseal --cert "$CERT" -o yaml < "$IN/minio-backup-secret.yaml" > "$OUT/sealed-minio-backup.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/grafana-admin.yaml"       > "$OUT/sealed-grafana-admin.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/keycloak-realm.yaml"      > "$OUT/sealed-keycloak-realm.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/oauth2-proxy.yaml"        > "$OUT/sealed-oauth2-proxy.yaml"
