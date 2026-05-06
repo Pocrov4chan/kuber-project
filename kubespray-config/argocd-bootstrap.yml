@@ -1,0 +1,46 @@
+---
+- name: Bootstrap ArgoCD and apply root-app
+  hosts: kube_control_plane[0]
+  become: true
+  gather_facts: false
+  vars:
+    argocd_version: v2.13.2
+    kubeconfig: /etc/kubernetes/admin.conf
+    root_app_src: "{{ playbook_dir }}/../argocd/root-app.yaml"
+  tasks:
+    - name: Wait for apiserver to be reachable
+      ansible.builtin.command: kubectl --kubeconfig={{ kubeconfig }} get nodes
+      register: kc
+      retries: 30
+      delay: 10
+      until: kc.rc == 0
+      changed_when: false
+
+    - name: Ensure argocd namespace exists
+      ansible.builtin.shell: |
+        kubectl --kubeconfig={{ kubeconfig }} create namespace argocd \
+          --dry-run=client -o yaml | kubectl --kubeconfig={{ kubeconfig }} apply -f -
+      changed_when: false
+
+    - name: Install ArgoCD ({{ argocd_version }})
+      ansible.builtin.command: >
+        kubectl --kubeconfig={{ kubeconfig }} apply -n argocd
+        -f https://raw.githubusercontent.com/argoproj/argo-cd/{{ argocd_version }}/manifests/install.yaml
+
+    - name: Wait for ArgoCD application-controller
+      ansible.builtin.command: >
+        kubectl --kubeconfig={{ kubeconfig }} wait
+        --for=condition=ready pod
+        -l app.kubernetes.io/name=argocd-application-controller
+        -n argocd --timeout=300s
+      changed_when: false
+
+    - name: Copy root-app manifest to control-plane node
+      ansible.builtin.copy:
+        src: "{{ root_app_src }}"
+        dest: /tmp/root-app.yaml
+        mode: "0644"
+
+    - name: Apply root-app (everything else cascades from here)
+      ansible.builtin.command: >
+        kubectl --kubeconfig={{ kubeconfig }} apply -f /tmp/root-app.yaml

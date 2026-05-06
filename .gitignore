@@ -8,7 +8,7 @@ screenshots_lab_10
 *.tgz
 helm-charts/my-chart/Chart.lock
 
-# Kubespray
+# Kubespray (vendored, our customizations live in kubespray-config/)
 kubespray/
 mycluster/credentials/
 

@@ -1,0 +1,6 @@
+---
+- name: Install Kubernetes
+  ansible.builtin.import_playbook: playbooks/cluster.yml
+
+- name: Bootstrap ArgoCD GitOps
+  ansible.builtin.import_playbook: argocd-bootstrap.yml
