@@ -1,4 +1,4 @@
-# VPA CR disabled along with the VPA controller (apps-of-apps/vpa-app.yaml).
+# VPA CR disabled along with the VPA controller (apps-of-apps/infrastructure/vpa.yaml).
 # Without the VPA CRD installed, this resource would fail to apply.
 #
 # apiVersion: autoscaling.k8s.io/v1

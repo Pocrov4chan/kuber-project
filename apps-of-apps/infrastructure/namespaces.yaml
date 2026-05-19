@@ -1,25 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: metallb-config
+  name: namespaces
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: default
   source:
     repoURL: https://github.com/Pocrov4chan/kuber-project.git
     targetRevision: HEAD
-    path: metallb-config
+    path: platform/namespaces
   destination:
     server: https://kubernetes.default.svc
-    namespace: metallb-system
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    retry:
-      limit: 5
-      backoff:
-        duration: 10s
-        maxDuration: 2m
+    syncOptions:
+      - RespectResourceNamespace=true

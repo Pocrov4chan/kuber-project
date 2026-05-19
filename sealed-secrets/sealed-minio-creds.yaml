@@ -1,4 +1,4 @@
-# MinIO disabled (apps-of-apps/minio-app.yaml). This sealed credential targets
+# MinIO disabled (apps-of-apps/infrastructure/minio.yaml). This sealed credential targets
 # the deleted `minio` namespace and was OutOfSync. Re-enable along with MinIO.
 #
 # ---

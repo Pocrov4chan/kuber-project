@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Pocrov4chan/kuber-project.git
     targetRevision: HEAD
-    path: admission-policies
+    path: platform/admission-policies
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:

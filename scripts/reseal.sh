@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CERT=/tmp/sealed-secrets-pub.pem
 IN="$REPO_ROOT/unsealed"
 OUT="$REPO_ROOT/sealed-secrets"
@@ -19,7 +19,7 @@ kubeseal --fetch-cert \
 echo "==> Re-sealing secrets..."
 kubeseal --cert "$CERT" -o yaml < "$IN/keycloak.yaml"            > "$OUT/sealed-keycloak.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/post.yaml"                > "$OUT/sealed-postgres.yaml"
-# MinIO disabled — uncomment along with apps-of-apps/minio-app.yaml
+# MinIO disabled — uncomment along with apps-of-apps/infrastructure/minio.yaml
 # kubeseal --cert "$CERT" -o yaml < "$IN/minio-creds.yaml"         > "$OUT/sealed-minio-creds.yaml"
 # kubeseal --cert "$CERT" -o yaml < "$IN/minio-backup-secret.yaml" > "$OUT/sealed-minio-backup.yaml"
 kubeseal --cert "$CERT" -o yaml < "$IN/grafana-admin.yaml"       > "$OUT/sealed-grafana-admin.yaml"

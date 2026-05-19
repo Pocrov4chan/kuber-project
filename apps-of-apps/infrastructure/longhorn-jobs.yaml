@@ -12,7 +12,7 @@
 #   source:
 #     repoURL: https://github.com/Pocrov4chan/kuber-project.git
 #     targetRevision: HEAD
-#     path: longhorn
+#     path: platform/longhorn
 #   destination:
 #     server: https://kubernetes.default.svc
 #     namespace: longhorn-system
